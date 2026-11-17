@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LeafScope — Field Diagnostic Ledger</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M8 40C8 20 22 8 42 6c-1 20-12 34-32 36z' fill='%233e5c3b'/%3E%3Cpath d='M8 40 34 14' stroke='%23ece4cf' stroke-width='2' fill='none'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M8 40C8 20 22 8 42 6c-1 20-12 34-32 36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M8 40 34 14M20 29l-1-9M26 23l-1-8M17 34l-9-3M25 27l9 1M31 19l8 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="wordmark">LeafScope</div>
+      <div class="tagline">Field diagnostic ledger</div>
+    </div>
+  </div>
+  <nav class="tabs" aria-label="Sections">
+    <button class="tab" data-view="bench" aria-pressed="true">The Bench</button>
+    <button class="tab" data-view="trials" aria-pressed="false">Trials</button>
+  </nav>
+  <div class="lamps" id="lamps" aria-live="polite"></div>
+</header>
+
+<!-- ============================ THE BENCH ============================ -->
+<main id="view-bench" class="bench">
+
+  <section class="drawer" aria-labelledby="h-table">
+    <h2 class="label" id="h-table">I · The table</h2>
+    <label class="drop" id="drop" tabindex="0">
+      <input type="file" id="file" accept="image/*" hidden>
+      <svg viewBox="0 0 120 90" aria-hidden="true">
+        <path d="M14 22v-8h8M98 14h8v8M106 68v8h-8M22 76h-8v-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M36 62c0-17 10-28 30-32 6-1 12-1 18-1-1 22-10 34-30 36-7 1-13 0-18-3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M34 66 74 38" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <span class="drop-title">Lay a leaf on the table</span>
+      <span class="drop-sub">Drop a photo, paste one, or click to choose.<br>One leaf, flat, filling most of the frame.</span>
+    </label>
+
+    <h2 class="label" id="h-drawer">II · Specimen drawer</h2>
+    <p class="fine">Held-out PlantVillage test photographs. The models never saw these during training.</p>
+    <div class="specimens" id="specimens" aria-labelledby="h-drawer"></div>
+  </section>
+
+  <section class="plate" aria-labelledby="h-plate">
+    <h2 class="label" id="h-plate">III · The plate</h2>
+    <div class="plate-card">
+      <span class="tape tape-a"></span><span class="tape tape-b"></span>
+      <div class="stage empty" id="stage">
+        <div class="stage-empty">
+          <svg viewBox="0 0 200 160" aria-hidden="true">
+            <path d="M30 120C30 62 66 28 168 22c-4 62-38 100-104 104" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 6"/>
+            <path d="M30 124 142 40" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 6"/>
+          </svg>
+          <p>No specimen on the table.</p>
+        </div>
+        <img id="img-base" alt="" hidden>
+        <img id="img-over" alt="" hidden>
+        <div class="curtain" id="curtain" hidden><span class="grip"></span></div>
+        <div class="scanline" id="scanline" hidden></div>
+        <div class="over-tag" id="over-tag" hidden></div>
+      </div>
+      <div class="rulebar" id="rulebar" hidden>
+        <span class="rule-end">leaf</span>
+        <input type="range" id="reveal" min="0" max="100" value="50" aria-label="Reveal overlay across the leaf">
+        <span class="rule-end" id="rule-layer">overlay</span>
+      </div>
+      <div class="layers" id="layers" role="group" aria-label="Overlay layer"></div>
+      <p class="caption" id="caption">Fig. — awaiting specimen</p>
+    </div>
+  </section>
+
+  <section class="ledger" aria-labelledby="h-ledger" aria-live="polite">
+    <h2 class="label" id="h-ledger">IV · Ledger entry</h2>
+    <div id="ledger" class="ledger-body">
+      <div class="ledger-idle">
+        <p class="serif-lg">Nothing has been entered yet.</p>
+        <p>Place a leaf on the table or open a specimen from the drawer. Two independent examiners
+        (a ResNet-50 and a MobileNetV2) will each give a verdict, show where they looked, and an
+        OpenCV pass will measure how much of the leaf is damaged.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============================== TRIALS ============================== -->
+<main id="view-trials" class="trials" hidden>
+  <div class="trials-head">
+    <h2 class="serif-xl">The trials</h2>
+    <p>ResNet-50 against MobileNetV2, fine-tuned on the same PlantVillage split and judged on the same
+    held-out photographs. Figures come from <code>evaluate.py</code>.</p>
+  </div>
+  <div id="trials-body"></div>
+</main>
+
+<footer class="foot">
+  CSE471 · Deep Learning for Computer Vision · Section K4P24MR — Automated Plant Leaf Disease Diagnosis and Severity Classification.
+  Screening aid only; confirm with a plant pathologist or local extension service.
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>
